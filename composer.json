@@ -1,0 +1,12 @@
+{
+    "name": "builtin_functions_usage",
+    "description": "Analyze usage of builtin PHP functions",
+    "require": {
+            "php": "^7.0",
+            "nikic/php-parser": "^4.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^7.0",
+            "friendsofphp/php-cs-fixer": "*"
+        }
+}
