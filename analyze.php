@@ -6,6 +6,7 @@ use PhpParser\{Node, NodeTraverser, NodeVisitorAbstract};
 
 require 'vendor/autoload.php';
 require 'visitor.php';
+require 'sensitivefunctionanalysis.php';
 
 class AnalyzeBuiltinFunctionUsage {
     protected array $builtin_functions;
@@ -46,14 +47,16 @@ class AnalyzeBuiltinFunctionUsage {
             }
         }
         arsort($this->builtin_functions);
+        $result = array();
         $total = 0;
         foreach ($this->builtin_functions as $key => $value) {
             if ($value > 0) {
-                echo $key.':'.$value.PHP_EOL;
+                $result[$key] = $value;
                 $total++;
             }
         }
         echo 'Total: '.$total.PHP_EOL;
+        return $result;
     }
 
     public static function getDirContents($dir, &$results = array()) {
@@ -76,6 +79,24 @@ class AnalyzeBuiltinFunctionUsage {
     }
 }
 
-$target_dir = $argv[1];
-$analyzer = new AnalyzeBuiltinFunctionUsage($target_dir);
-$analyzer->extract_usage();
+$target_dir_1 = $argv[1];
+$analyzer = new AnalyzeBuiltinFunctionUsage($target_dir_1);
+$original_usage_results = $analyzer->extract_usage();
+
+$target_dir_2 = $argv[2];
+$analyzer = new AnalyzeBuiltinFunctionUsage($target_dir_2);
+$debloated_usage_results = $analyzer->extract_usage();
+
+$sensitivefunc_analyzer = new SensitiveFunctionAnalysis();
+$sensitivefunc_analyzer->compare($original_usage_results, $debloated_usage_results);
+
+// foreach ($sensitivefunc_analyzer->diff_results as $key => $value) {
+//     echo $key . ':' . $value . PHP_EOL;
+// }
+
+echo 'Command execution:' . $sensitivefunc_analyzer->command_execution_calls[0] . '->' . $sensitivefunc_analyzer->command_execution_calls[1] . PHP_EOL;
+echo 'PHP code execution:' . $sensitivefunc_analyzer->php_code_execution_calls[0] . '->' . $sensitivefunc_analyzer->php_code_execution_calls[1] . PHP_EOL;
+echo 'Callbacks:' . $sensitivefunc_analyzer->callback_calls[0] . '->' . $sensitivefunc_analyzer->callback_calls[1] . PHP_EOL;
+echo 'Information disclosure:' . $sensitivefunc_analyzer->information_disclosure_calls[0] . '->' . $sensitivefunc_analyzer->information_disclosure_calls[1] . PHP_EOL;
+echo 'Other calls:' . $sensitivefunc_analyzer->other_calls[0] . '->' . $sensitivefunc_analyzer->other_calls[1] . PHP_EOL;
+echo 'Filesystem calls:' . $sensitivefunc_analyzer->filesystem_calls[0] . '->' . $sensitivefunc_analyzer->filesystem_calls[1] . PHP_EOL;

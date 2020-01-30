@@ -26,6 +26,10 @@ class Visitor extends NodeVisitorAbstract {
         switch ($node->getType()) {
             case $method_call->getType():
             case $func_call->getType():
+                if ($node->name === 'error_log') {
+                    // Skip error logs
+                    return $node;
+                }
                 if (is_string($node->name)) {
                     $node_name = $node->name;
                 }
