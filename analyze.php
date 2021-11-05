@@ -22,7 +22,7 @@ class AnalyzeBuiltinFunctionUsage {
          // For each file
         $files = AnalyzeBuiltinFunctionUsage::getDirContents($this->target_dir);
         foreach ($files as $key => $file_name) {
-            if (array_key_exists('extension', pathinfo($file_name)) && (pathinfo($file_name)['extension'] == 'php')) {
+            if (array_key_exists('extension', pathinfo($file_name)) && ((pathinfo($file_name)['extension'] == 'php') || (pathinfo($file_name)['extension'] == 'inc'))) {
                 $code = file_get_contents($file_name);
                 $parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP5);
                 try {
@@ -100,3 +100,5 @@ echo 'Callbacks:' . $sensitivefunc_analyzer->callback_calls[0] . '->' . $sensiti
 echo 'Information disclosure:' . $sensitivefunc_analyzer->information_disclosure_calls[0] . '->' . $sensitivefunc_analyzer->information_disclosure_calls[1] . PHP_EOL;
 echo 'Other calls:' . $sensitivefunc_analyzer->other_calls[0] . '->' . $sensitivefunc_analyzer->other_calls[1] . PHP_EOL;
 echo 'Filesystem calls:' . $sensitivefunc_analyzer->filesystem_calls[0] . '->' . $sensitivefunc_analyzer->filesystem_calls[1] . PHP_EOL;
+echo 'Database calls:' . $sensitivefunc_analyzer->database_calls[0] . '->' . $sensitivefunc_analyzer->database_calls[1] . PHP_EOL;
+echo 'XSS calls:' . $sensitivefunc_analyzer->xss_calls[0] . '->' . $sensitivefunc_analyzer->xss_calls[1] . PHP_EOL;
