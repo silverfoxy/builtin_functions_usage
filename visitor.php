@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-require 'vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 
-class Visitor extends NodeVisitorAbstract {
+class BuiltinFunctionVisitor extends NodeVisitorAbstract {
     public $file_name;
     public $script_dir;
     public array $builtin_functions;

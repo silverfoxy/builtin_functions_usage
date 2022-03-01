@@ -45,6 +45,36 @@ class SensitiveFunctionAnalysis {
     public array $database_calls = [0, 0];
     public array $xss_calls = [0, 0];
 
+    public function analyze_single_app(array $builtin_functions) {
+        foreach ($builtin_functions as $key => $value) {
+            // Count number of sensitive function calls and its reduction
+            if (in_array($key, $this->command_execution)) {
+                $this->command_execution_calls[0] += $builtin_functions[$key];
+            }
+            if (in_array($key, $this->php_code_execution)) {
+                $this->php_code_execution_calls[0] += $builtin_functions[$key];
+            }
+            if (in_array($key, $this->callbacks)) {
+                $this->callback_calls[0] += $builtin_functions[$key];
+            }
+            if (in_array($key, $this->information_disclosure)) {
+                $this->information_disclosure_calls[0] += $builtin_functions[$key];
+            }
+            if (in_array($key, $this->other)) {
+                $this->other_calls[0] += $builtin_functions[$key];
+            }
+            if (in_array($key, $this->filesystem)) {
+                $this->filesystem_calls[0] += $builtin_functions[$key];
+            }
+            if (in_array($key, $this->database)) {
+                $this->database_calls[0] += $builtin_functions[$key];
+            }
+            if (in_array($key, $this->xss)) {
+                $this->xss_calls[0] += $builtin_functions[$key];
+            }
+        }
+    }
+
     public function compare(array $original_builtin_functions, array $debloated_builtin_functions) {
         foreach ($original_builtin_functions as $key => $value) {
             // Measure the reduction in number of calls
