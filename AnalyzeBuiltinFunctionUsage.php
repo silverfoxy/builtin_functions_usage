@@ -13,7 +13,7 @@ class AnalyzeBuiltinFunctionUsage {
     protected string $target_dir;
 
     public function __construct($target_dir) {
-        $this->builtin_functions = file('php_builtinfunctions.list', FILE_IGNORE_NEW_LINES);
+        $this->builtin_functions = file(__DIR__ . '/php_builtinfunctions.list', FILE_IGNORE_NEW_LINES);
         $this->target_dir = $target_dir;
     }
 
